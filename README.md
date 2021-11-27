@@ -26,21 +26,39 @@
 `0x...`
 
 # Usage
-
 ## Install dependencies
 
 *Prerequisite: You must have node.js and npm installed*
 
-```
+```sh
 npm install -g truffle
 npm install @openzeppelin/contracts
+npm i -g --only=prod https-localhost # Only if running the app locally
 ```
 
 ## Accessing the project
 <!-- link to frontend -->
 
+## Running locally
+
+*Prerequisite: You must run a local blockchain like Ganache in the background*
+
+```sh
+truffle compile
+truffle migrate
+serve . # May need sudo depending on OS
+```
+
+Open `localhost:5000`, switch Metamask to your local blockchain network, and connect
+
+### Create a frontend/env.js file containing the following
+```
+const INFURA_PROJECT_ID=<insert_yours_here>
+const CONTRACT_ADDRESS=<out_of_truffle_migrate>
+```
+
 ## Run unit tests
 
-```
+```sh
 truffle test
 ```
