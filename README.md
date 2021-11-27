@@ -27,7 +27,19 @@
 
 # Usage
 
-## Run tests
+## Install dependencies
+
+*Prerequisite: You must have node.js and npm installed*
+
+```
+npm install -g truffle
+npm install @openzeppelin/contracts
+```
+
+## Accessing the project
+<!-- link to frontend -->
+
+## Run unit tests
 
 ```
 truffle test
