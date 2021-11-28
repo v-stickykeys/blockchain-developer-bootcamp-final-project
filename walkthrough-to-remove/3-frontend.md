@@ -27,7 +27,7 @@ Make sure you have [testnet ETH](https://faucets.chain.link)
 Add the deployed contract address to you env.js file
 
 ```js
-const CONTRACT_ADDRESS=<insert_yours_here>
+const CONTRACT_ADDRESS_RINKEBY=<insert_yours_here>
 ```
 
 # Edit your index.html

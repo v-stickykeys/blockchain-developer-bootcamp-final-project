@@ -1,5 +1,4 @@
 # Name of project here
-
 <!-- project description -->
 
 ## Demo
@@ -26,6 +25,7 @@
 `0x...`
 
 # Usage
+
 ## Install dependencies
 
 *Prerequisite: You must have node.js and npm installed*
@@ -52,9 +52,10 @@ serve . # May need sudo depending on OS
 Open `localhost:5000`, switch Metamask to your local blockchain network, and connect
 
 ### Create a frontend/env.js file containing the following
+
 ```
 const INFURA_PROJECT_ID=<insert_yours_here>
-const CONTRACT_ADDRESS=<out_of_truffle_migrate>
+const CONTRACT_ADDRESS_RINKEBY=<from_truffle_migrate>
 ```
 
 ## Run unit tests

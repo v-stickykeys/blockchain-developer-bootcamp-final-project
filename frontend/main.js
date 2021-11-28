@@ -62,9 +62,13 @@ function init() {
 async function fetchAccountData() {
   web3 = new Web3(provider);
   console.log("Web3 instance is", web3);
-  contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-
   const chainId = await web3.eth.getChainId();
+  if (chainId == 4) {
+    contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS_RINKEBY);
+  } else {
+    alertMessage.style.display = "block";
+    alertMessage.textContent = "Unsupported network. Change network to Rinkeby.";
+  }
   const chainData = evmChains.getChain(chainId);
   networkMessage.textContent = chainData.name;
 
