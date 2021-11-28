@@ -31,14 +31,30 @@
                 <strong>Selected account:</strong> <span id="selected-account"></span>
               </p>
             </div>
-            <button class="btn btn-primary" id="btn-mint">
-              Mint
-            </button>
-            <button class="btn btn-primary" id="btn-burn">
-              Burn
-            </button>
+            <form class="form-inline">
+              <button class="btn btn-primary" id="btn-mint">
+                Mint
+              </button>
+              <button class="btn btn-primary" id="btn-burn">
+                Burn
+              </button>
+              <input id="input-burn" class="form-control" type="text" placeholder="[1, 2, 3, ...]">
+            </form>
+            <div id="tx" style="display: none">
+              <p>
+                <strong>Transaction hash:</strong> <a id="tx-hash" href="" target="_blank"></a>
+              </p>
+            </div>
+            <div id="error" style="display: none">
+              <p>
+                <strong>Error:</strong> <span id="alert-error-message"></span>
+              </p>
+            </div>
             <hr>
             <h3>Account balances</h3>
+            <button class="btn btn-primary" id="btn-refresh">
+              Refresh
+            </button>
             <table class="table table-listing">
               <thead>
                 <th>Address</th>

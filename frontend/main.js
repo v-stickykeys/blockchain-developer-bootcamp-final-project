@@ -16,14 +16,21 @@ const connectButton = document.querySelector("#btn-connect");
 const disconnectButton = document.querySelector("#btn-disconnect");
 const mintButton = document.querySelector("#btn-mint");
 const burnButton = document.querySelector("#btn-burn");
+const refreshButton = document.querySelector("#btn-refresh");
+
+const burnInput = document.querySelector("#input-burn");
 
 const alertMessage = document.querySelector("#alert-error-https");
 const networkMessage = document.querySelector("#network-name");
 const selectedAccountMessage = document.querySelector("#selected-account");
+const txHashMessage = document.querySelector("#tx-hash");
+const errorMessage = document.querySelector("#alert-error-message");
 
 const accountContainer = document.querySelector("#accounts");
 const tableTemplate = document.querySelector("#template-balance");
 
+const txSection = document.querySelector("#tx");
+const errorSection = document.querySelector("#error");
 const notConnectedSection = document.querySelector("#not-connected");
 const connectedSection = document.querySelector("#connected");
 
@@ -117,6 +124,7 @@ async function refreshAccountData() {
   connectButton.setAttribute("disabled", "disabled");
   await fetchAccountData(provider);
   connectButton.removeAttribute("disabled");
+  burnInput.value = "";
 }
 
 async function onConnect() {
@@ -158,7 +166,12 @@ async function onDisconnect() {
 }
 
 async function onMint() {
-  console.log("Minting");
+  console.log("Minting...");
+
+  txSection.style.display = "none";
+  txHashMessage.textContent = "";
+  errorSection.style.display = "none";
+  errorMessage.textContent = "";
 
   const amount = web3.utils.toBN(1);
   const price = await new Promise((resolve, reject) => {
@@ -174,27 +187,44 @@ async function onMint() {
       else resolve(res)
     });
   });
-  if (tx.logs) {
-    console.log(tx.logs);
-    // TODO: Show mints in UI
-    await refreshAccountData();
+  if (tx) {
+    console.log(tx);
+    txSection.style.display = "block";
+    txHashMessage.setAttribute("href", `https://rinkeby.etherscan.io/tx/${tx}`)
+    txHashMessage.textContent = tx;
   }
 }
 
-async function onBurn() {
-  console.log("Burning");
+async function onBurn(e) {
+  e.preventDefault();
+  console.log("Burning...");
 
-  const tokenIds = [1];
+  txSection.style.display = "none";
+  txHashMessage.textContent = "";
+  errorSection.style.display = "none";
+  errorMessage.textContent = "";
+
+  let tokenIds;
+  try {
+    tokenIds = JSON.parse(burnInput.value);
+  } catch (error) {
+    errorSection.style.display = "block";
+    errorMessage.textContent = "Invalid input. Must be an array of token ids.";
+    return;
+  }
+
   const tx = await new Promise((resolve, reject) => {
     contract.methods.burn(tokenIds).send({ from: selectedAccount }, (err, res) => {
       if (err) reject(err)
       else resolve(res)
     });
   });
-  if (tx.logs) {
-    console.log(tx.logs);
-    // TODO: Show burns in UI
-    await refreshAccountData();
+  if (tx) {
+    console.log(tx);
+    txSection.style.display = "block";
+    txHashMessage.setAttribute("href", `https://rinkeby.etherscan.io/tx/${tx}`)
+    txHashMessage.textContent = tx;
+    burnInput.value = "";
   }
 }
 
@@ -202,6 +232,7 @@ window.addEventListener('load', async () => {
   init();
   connectButton.addEventListener("click", onConnect);
   disconnectButton.addEventListener("click", onDisconnect);
+  refreshButton.addEventListener("click", refreshAccountData);
   mintButton.addEventListener("click", onMint);
   burnButton.addEventListener("click", onBurn);
 });
