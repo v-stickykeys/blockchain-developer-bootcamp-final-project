@@ -18,6 +18,7 @@ const mintButton = document.querySelector("#btn-mint");
 const burnButton = document.querySelector("#btn-burn");
 const refreshButton = document.querySelector("#btn-refresh");
 
+const mintInput = document.querySelector("#input-mint");
 const burnInput = document.querySelector("#input-burn");
 
 const alertMessage = document.querySelector("#alert-error-https");
@@ -73,11 +74,16 @@ async function fetchAccountData() {
   if (chainId == 4) {
     contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS_RINKEBY);
   } else {
-    alertMessage.style.display = "block";
-    alertMessage.textContent = "Unsupported network. Change network to Rinkeby.";
+    contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS_LOCAL);
   }
-  const chainData = evmChains.getChain(chainId);
-  networkMessage.textContent = chainData.name;
+
+  try {
+    const chainData = evmChains.getChain(chainId); // this breaks for evmChains if it is local
+  } catch (error) {
+    console.log(error);
+  }
+
+  networkMessage.textContent = (chainId != 4) ? 'local' : chainData.name;
 
   const accounts = await web3.eth.getAccounts();
   console.log("Got accounts", accounts);
@@ -165,15 +171,29 @@ async function onDisconnect() {
   connectedSection.style.display = "none";
 }
 
-async function onMint() {
+async function onMint(e) {
+  e.preventDefault();
   console.log("Minting...");
+
+  let mintAmount=0;
 
   txSection.style.display = "none";
   txHashMessage.textContent = "";
   errorSection.style.display = "none";
   errorMessage.textContent = "";
 
-  const amount = web3.utils.toBN(1);
+  try {
+    mintAmount = JSON.parse(mintInput.value);
+    if(mintAmount <= 0) {
+      throw new Error('A positive number is required');
+    }
+  } catch (error) {
+    errorSection.style.display = "block";
+    errorMessage.textContent = "Invalid input. Must be a number greater than 0.";
+    return;
+  }
+
+  const amount = web3.utils.toBN(mintAmount);
   const price = await new Promise((resolve, reject) => {
     contract.methods.PRICE().call((err, res) => {
       if (err) reject(err)

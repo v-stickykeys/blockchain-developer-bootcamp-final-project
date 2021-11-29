@@ -46,16 +46,18 @@ npm i -g --only=prod https-localhost # Only if running the app locally
 ```sh
 truffle compile
 truffle migrate
+cd frontend/
 serve . # May need sudo depending on OS
 ```
 
-Open `localhost:5000`, switch Metamask to your local blockchain network, and connect
+Open `localhost`, switch Metamask to your local blockchain network, and connect
 
 ### Create a frontend/env.js file containing the following
 
 ```
 const INFURA_PROJECT_ID=<insert_yours_here>
 const CONTRACT_ADDRESS_RINKEBY=<from_truffle_migrate>
+const CONTRACT_ADDRESS_LOCAL=<from_ganache>
 ```
 
 ## Run unit tests
